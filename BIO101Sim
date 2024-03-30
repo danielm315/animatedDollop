@@ -1,1 +1,66 @@
+import random
+import math
+import numpy as np
+print("This is a simulation of a Mark and Recapture experiment for my BIO 101 Lab. We will be experimenting with theortical noodles, 4 cups of dried elbow macaroni to be specific. I don't have noodles, so I decided to not buy any and try and make some code for it.")
 
+cup = random.randint(int(math.sqrt(1150)), int(math.sqrt(1400)))#The numbers we are using, are based off of a sample we obtained from my brother over FaceTime. I asked him to take a half cup of elbow macaroni and this what we received. We are estimating the total sample of 4 cups of elbow mac.
+
+print(cup)
+def create_random_2d_matrix():
+    rows = cup
+    columns = cup
+    return [[0 for _ in range(columns)] for _ in range(rows)]
+
+def randomly_change_zeros_to_ones(matrix, changed_indices):
+    rows = len(matrix)
+    columns = len(matrix[0])
+
+    num_changes = random.randint(140, 210)  # Randomly select the number of elements to change to ones
+
+    # Create a list of all indices in the matrix
+    all_indices = [(i, j) for i in range(rows) for j in range(columns)]
+
+    # Ensure we don't try to change more elements than there are available
+    num_changes = min(num_changes, len(all_indices))
+
+    # Randomly select and change elements to ones
+    selected_indices = random.sample(all_indices, num_changes)
+    zeros_to_ones_count = 0
+    ones_stayed_count = 0
+
+    for i, j in selected_indices:
+        if matrix[i][j] == 0:
+            matrix[i][j] = 1
+            zeros_to_ones_count += 1
+        else:
+            ones_stayed_count += 1
+
+    # Update the set of changed indices with the newly selected indices
+    changed_indices.update(selected_indices)
+
+    return matrix, zeros_to_ones_count, ones_stayed_count, changed_indices
+
+# Repeat the process 10 times with the same matrix
+num_iterations = 10
+total_zeros_to_ones_count = 0
+total_ones_stayed_count = 0
+changed_indices = set()
+
+matrix = create_random_2d_matrix()
+
+for iteration in range(1, num_iterations + 1):
+    matrix, zeros_to_ones_count, ones_stayed_count, changed_indices = randomly_change_zeros_to_ones(matrix, changed_indices)
+    total_zeros_to_ones_count += zeros_to_ones_count
+    total_ones_stayed_count += ones_stayed_count
+
+    # Print the modified matrix for each iteration
+    print(f"Iteration {iteration}:")
+    for row in matrix:
+        print(row)
+
+    print("Number of elements changed to ones:", zeros_to_ones_count)
+    print("Number of ones that stayed ones:", ones_stayed_count)
+    print("------------------------")
+
+print("Total number of elements changed to ones:", total_zeros_to_ones_count)
+print("Total number of ones that stayed ones:", total_ones_stayed_count)
